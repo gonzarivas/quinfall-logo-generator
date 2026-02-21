@@ -1,0 +1,385 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  background: #0f0f12;
+  color: #e2e2e6;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Hero / Header */
+.hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hero-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #7a8ab8;
+  flex-shrink: 0;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #888;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Upload */
+.upload-section {
+  margin-bottom: 2rem;
+}
+
+.drop-zone {
+  border: 2px dashed #333;
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: #5a7ab8;
+  background: rgba(90, 122, 184, 0.08);
+}
+
+.drop-zone:active {
+  transform: scale(0.99);
+}
+
+.drop-icon {
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.drop-zone:hover .drop-icon,
+.drop-zone.dragover .drop-icon {
+  color: #5a7ab8;
+}
+
+.drop-text {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  color: #ccc;
+}
+
+.drop-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.upload-error {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  color: #d66;
+  min-height: 1.25rem;
+}
+
+/* Workspace */
+.workspace-section {
+  display: block;
+}
+
+.workspace-section[hidden] {
+  display: none !important;
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.panel-title {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #b0b8d0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.title-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #7a8ab0;
+}
+
+.label-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: #7a8ab0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.control-group label {
+  font-size: 0.8rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.control-group-slider {
+  flex: 1;
+  min-width: 160px;
+}
+
+.control-group-slider label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.control-value {
+  font-size: 0.8rem;
+  color: #7a8ab0;
+  font-weight: 500;
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="color"] {
+  width: 2.75rem;
+  height: 2.25rem;
+  padding: 2px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #1a1a1e;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 4px;
+  border: none;
+}
+
+.color-hex {
+  font-size: 0.8rem;
+  font-family: ui-monospace, monospace;
+  color: #888;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 6px;
+  accent-color: #5a7ab8;
+  background: #25252a;
+  border-radius: 3px;
+}
+
+.hint-editor {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.canvas-wrapper {
+  overflow: auto;
+  max-width: 100%;
+  background: #16161a;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#workspaceCanvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Columna vista previa y descarga (sin caja, no confundir con el contenido) */
+.preview-col {
+  position: sticky;
+  top: 1rem;
+  padding-left: 0.5rem;
+}
+
+.preview-col-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #a0a8c0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.preview-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.preview-inline {
+  margin-bottom: 1.25rem;
+}
+
+.preview-inline canvas {
+  display: block;
+  width: 60px;
+  height: 40px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+#previewCanvas {
+  display: block;
+  width: 60px;
+  height: 40px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.download-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0d0d10;
+  background: linear-gradient(180deg, #6b8cce 0%, #5a7ab8 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(90, 122, 184, 0.35);
+}
+
+.btn-icon,
+.btn-download svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+}
+
+.btn-download:hover {
+  filter: brightness(1.12);
+}
+
+.btn-download:active {
+  transform: scale(0.98);
+}
+
+.btn-download:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.export-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  color: #555;
+  line-height: 1.35;
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+}
