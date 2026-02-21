@@ -6,6 +6,7 @@
   const CROP_LEFT_WIDTH = 40;
   const CROP_RIGHT_WIDTH = 20;
   const ZOOM_FIXED = 10;
+  const MOBILE_BREAKPOINT = 480;
   const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
   const CYAN_LINE = 'rgba(0, 204, 204, 0.6)';
 
@@ -14,6 +15,7 @@
   const uploadError = document.getElementById('uploadError');
   const workspaceSection = document.getElementById('workspaceSection');
   const workspaceCanvas = document.getElementById('workspaceCanvas');
+  const canvasWrapper = workspaceCanvas.parentElement;
   const previewCanvas = document.getElementById('previewCanvas');
   const bgColorInput = document.getElementById('bgColor');
   const bgColorHexEl = document.getElementById('bgColorHex');
@@ -25,6 +27,7 @@
     image: null,
     bgColor: '#000000',
     imageScale: 1,
+    zoom: ZOOM_FIXED,
     offsetX: 0,
     offsetY: 0,
     isDragging: false,
@@ -59,6 +62,7 @@
       workspaceSection.hidden = false;
       updateScaleRangeFromImage();
       draw();
+      requestAnimationFrame(function () { requestAnimationFrame(draw); });
     };
     img.onerror = function () {
       URL.revokeObjectURL(url);
@@ -145,15 +149,25 @@
     }
   }
 
+  function getDisplayZoom() {
+    if (!window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT + 'px)').matches) return ZOOM_FIXED;
+    var wrapper = workspaceCanvas.parentElement;
+    if (!wrapper) return ZOOM_FIXED;
+    var w = wrapper.clientWidth;
+    if (w <= 0) w = Math.min(window.innerWidth - 24, 600);
+    return Math.min(ZOOM_FIXED, Math.max(3, Math.floor(w / LOGIC_WIDTH)));
+  }
+
   function draw() {
-    const zoom = ZOOM_FIXED;
-    const width = LOGIC_WIDTH * zoom;
-    const height = LOGIC_HEIGHT * zoom;
+    var zoom = getDisplayZoom();
+    state.zoom = zoom;
+    var width = LOGIC_WIDTH * zoom;
+    var height = LOGIC_HEIGHT * zoom;
 
     workspaceCanvas.width = width;
     workspaceCanvas.height = height;
 
-    const ctx = workspaceCanvas.getContext('2d');
+    var ctx = workspaceCanvas.getContext('2d');
     ctx.save();
     ctx.scale(zoom, zoom);
     drawToContext(ctx, LOGIC_WIDTH, LOGIC_HEIGHT, false);
@@ -168,7 +182,7 @@
     if (previewCanvas) {
       previewCanvas.width = LOGIC_WIDTH;
       previewCanvas.height = LOGIC_HEIGHT;
-      const prevCtx = previewCanvas.getContext('2d');
+      var prevCtx = previewCanvas.getContext('2d');
       drawToContext(prevCtx, LOGIC_WIDTH, LOGIC_HEIGHT, false);
     }
   }
@@ -194,15 +208,62 @@
     state.dragStartOffsetY = state.offsetY;
   });
 
+  function applyDragDelta(deltaX, deltaY) {
+    state.offsetX = state.dragStartOffsetX + deltaX / state.zoom;
+    state.offsetY = state.dragStartOffsetY + deltaY / state.zoom;
+    draw();
+  }
+
   window.addEventListener('mousemove', function (e) {
     if (!state.isDragging) return;
-    state.offsetX = state.dragStartOffsetX + (e.clientX - state.dragStartX) / ZOOM_FIXED;
-    state.offsetY = state.dragStartOffsetY + (e.clientY - state.dragStartY) / ZOOM_FIXED;
-    draw();
+    applyDragDelta(e.clientX - state.dragStartX, e.clientY - state.dragStartY);
   });
 
   window.addEventListener('mouseup', function () {
     state.isDragging = false;
+  });
+
+  function onTouchStart(e) {
+    if (!state.image || e.touches.length !== 1) return;
+    e.preventDefault();
+    state.isDragging = true;
+    state.dragStartX = e.touches[0].clientX;
+    state.dragStartY = e.touches[0].clientY;
+    state.dragStartOffsetX = state.offsetX;
+    state.dragStartOffsetY = state.offsetY;
+  }
+
+  function onTouchMove(e) {
+    if (!state.isDragging || e.touches.length !== 1) return;
+    e.preventDefault();
+    var tx = e.touches[0].clientX;
+    var ty = e.touches[0].clientY;
+    applyDragDelta(tx - state.dragStartX, ty - state.dragStartY);
+    state.dragStartOffsetX = state.offsetX;
+    state.dragStartOffsetY = state.offsetY;
+    state.dragStartX = tx;
+    state.dragStartY = ty;
+  }
+
+  function onTouchEnd(e) {
+    if (e.touches.length === 0) state.isDragging = false;
+  }
+
+  function onTouchCancel() {
+    state.isDragging = false;
+  }
+
+  var touchOpts = { passive: false };
+  [workspaceCanvas, canvasWrapper].forEach(function (el) {
+    if (!el) return;
+    el.addEventListener('touchstart', onTouchStart, touchOpts);
+    el.addEventListener('touchmove', onTouchMove, touchOpts);
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    el.addEventListener('touchcancel', onTouchCancel, { passive: true });
+  });
+
+  window.addEventListener('resize', function () {
+    if (state.image) draw();
   });
 
   function buildOffscreenCanvas() {

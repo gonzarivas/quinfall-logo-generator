@@ -261,6 +261,9 @@ input[type="range"] {
   align-items: center;
   min-height: 180px;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #workspaceCanvas {
@@ -268,6 +271,12 @@ input[type="range"] {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  touch-action: none;
+  cursor: grab;
+}
+
+#workspaceCanvas:active {
+  cursor: grabbing;
 }
 
 /* Columna vista previa y descarga (sin caja, no confundir con el contenido) */
@@ -478,7 +487,16 @@ input[type="range"] {
 
   .canvas-wrapper {
     padding: 0.5rem;
-    min-height: 140px;
+    min-height: 0;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .canvas-wrapper #workspaceCanvas {
+    max-width: 100%;
+    height: auto;
   }
 
   .preview-col-title {
